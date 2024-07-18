@@ -33,6 +33,12 @@ public class Thermostat
 
     public void Work()
     {
-        throw new NotImplementedException();
+        double temperature = temperatureSensor.GetTemperature();
+
+        // temperature between boudaries 
+        if (temperature > Setpoint - Offset && temperature < Setpoint + Offset)
+        {
+            // Do nothing
+        }
     }
 }
