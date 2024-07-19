@@ -50,12 +50,20 @@ public class Thermostat
         {
             // Do nothing
         }
-        // temperature less than lower boundary 
+        // temperature higher than upper boundary 
         else if (temperature > Setpoint + Offset)
         {
             heatingElement.Disable();
         }
-        //// Alternative
+        // temperature eqauls upper boundary 
+        else if (temperature == Setpoint + Offset)
+        {
+            // Do nothing
+        }
+        else
+        {
+            // Do nothing
+        }        //// Alternative
         //if (temperature < Setpoint - Offset)
         //{
         //    heatingElement.Enable();
