@@ -45,5 +45,10 @@ public class Thermostat
         {
             heatingElement.Enable();
         }
+        // temperature equals lower boudary
+        else if (temperature == Setpoint - Offset)
+        {
+            // Do nothing
+        }
     }
 }
