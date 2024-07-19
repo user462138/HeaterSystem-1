@@ -50,10 +50,19 @@ public class Thermostat
         {
             // Do nothing
         }
+        // temperature less than lower boundary 
+        else if (temperature > Setpoint + Offset)
+        {
+            heatingElement.Disable();
+        }
         //// Alternative
         //if (temperature < Setpoint - Offset)
         //{
         //    heatingElement.Enable();
+        //}
+        //else if (temperature > Setpoint + Offset)
+        //{
+        //    heatingElement.Disable();
         //}
         //else
         //{
