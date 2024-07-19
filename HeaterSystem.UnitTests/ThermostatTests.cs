@@ -69,4 +69,19 @@ public class ThermostatTests
         heatingElementMock.Verify(x => x.Enable(), Times.Never);
         heatingElementMock.Verify(x => x.Disable(), Times.Never);
     }
+    [TestMethod]
+    public void WorkWhenTemperatureHigherThanUpperBoundaryDisableHeatingElement()
+    {
+        // --- Arrange ---
+        // Configure the mock object to get the temperature higher than upper boundary = 23.0
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(23.0);
+
+        // --- Act ---
+        thermostat.Work();
+
+        // --- Assert ---
+        // Verify that neither the method Enable nor the method Disable of the heatingElementMock object is called (= Do Nothing)
+        heatingElementMock.Verify(x => x.Enable(), Times.Never);
+        heatingElementMock.Verify(x => x.Disable(), Times.Once);
+    }
 }
