@@ -35,15 +35,29 @@ public class Thermostat
     {
         double temperature = temperatureSensor.GetTemperature();
 
-        // temperature between boudaries 
+        // temperature between boundaries 
         if (temperature > Setpoint - Offset && temperature < Setpoint + Offset)
         {
             // Do nothing
         }
-        // temperature less than lower boudary 
+        // temperature less than lower boundary 
         else if (temperature < Setpoint - Offset)
         {
             heatingElement.Enable();
         }
+        // temperature eqauls lower boundary 
+        else if (temperature == Setpoint - Offset)
+        {
+            // Do nothing
+        }
+        //// Alternative
+        //if (temperature < Setpoint - Offset)
+        //{
+        //    heatingElement.Enable();
+        //}
+        //else
+        //{
+        //  //Do Nothing
+        //} 
     }
 }
