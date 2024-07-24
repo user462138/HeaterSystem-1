@@ -1,7 +1,7 @@
 ﻿using HeaterSystem;
 
-ITemperatureSensor temperatureSensor = new TemperatureSensor();
-IHeatingElement heatingElement = new HeatingElement();
+ITemperatureSensor temperatureSensor = new TemperatureSensorOpenWeather();
+IHeatingElement heatingElement = new HeatingElementStub();
 
 Thermostat thermostat = new Thermostat(temperatureSensor, heatingElement);
 
