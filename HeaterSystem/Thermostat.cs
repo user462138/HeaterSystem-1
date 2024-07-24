@@ -85,7 +85,12 @@ public class Thermostat
         }
         catch
         {
-            // Do nothing
+            failures++;
+            // maximum number of failures reached
+            if (failures >= MaxFailures)
+            {
+                heatingElement.Disable();
+            }
         }
 
     }
