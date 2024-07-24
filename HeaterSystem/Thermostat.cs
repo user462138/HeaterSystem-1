@@ -52,6 +52,8 @@ public class Thermostat
         try
         {
             double temperature = temperatureSensor.GetTemperature();
+            // reset number of failures
+            failures = 0;
 
             // temperature between boundaries 
             if (temperature > Setpoint - Offset && temperature < Setpoint + Offset)
