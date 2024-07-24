@@ -5,6 +5,11 @@ namespace HeaterSystem.UnitTests;
 [TestClass]
 public class ThermostatTests
 {
+    private const double Setpoint = 20.0; 
+    private const double Offset = 2.0;
+    private const double Difference = 0.5;
+    private const int MaxFailures = 2;
+
     private Mock<ITemperatureSensor> temperatureSensorMock = null;
     private Mock<IHeatingElement> heatingElementMock = null;
 
@@ -20,17 +25,17 @@ public class ThermostatTests
         // Create the test object, set the setpoint and offset
         thermostat = new Thermostat(temperatureSensorMock.Object, heatingElementMock.Object)
         {
-            Setpoint = 20.0,
-            Offset = 2.0,
-            MaxFailures = 2
+            Setpoint = Setpoint,
+            Offset = Offset,
+            MaxFailures = MaxFailures
         };
     }
     [TestMethod]
     public void WorkWhenTemperatureBetweenBoundariesDoNothing()
     {
         // --- Arrange ---
-        // Configure the mock object to get the temperature between boundaries = 19.0
-        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(19.0);
+        // Configure the mock object to get the temperature between boundaries = Setpoint
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(Setpoint);
 
         // --- Act ---
         thermostat.Work();
@@ -44,8 +49,8 @@ public class ThermostatTests
     public void WorkWhenTemperatureLessThanLowerBoundaryEnableHeatingElement()
     {
         // --- Arrange ---
-        // Configure the mock object to get the temperature less than lower boundary = 17.0
-        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(17.0);
+        // Configure the mock object to get the temperature less than lower boundary = Setpoint - Offset - Difference
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(Setpoint - Offset - Difference);
 
         // --- Act ---
         thermostat.Work();
@@ -59,8 +64,8 @@ public class ThermostatTests
     public void WorkWhenTemperatureEqualsLowerBoundaryDoNothing()
     {
         // --- Arrange ---
-        // Configure the mock object to get the temperature equal than lower boundary = 18.0
-        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(18.0);
+        // Configure the mock object to get the temperature equal than lower boundary = Setpoint - Offset
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(Setpoint - Offset);
 
         // --- Act ---
         thermostat.Work();
@@ -74,8 +79,8 @@ public class ThermostatTests
     public void WorkWhenTemperatureHigherThanUpperBoundaryDisableHeatingElement()
     {
         // --- Arrange ---
-        // Configure the mock object to get the temperature higher than upper boundary = 23.0
-        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(23.0);
+        // Configure the mock object to get the temperature higher than upper boundary = Setpoint + Offset + Difference
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(Setpoint + Offset + Difference);
 
         // --- Act ---
         thermostat.Work();
@@ -89,8 +94,8 @@ public class ThermostatTests
     public void WorkWhenTemperatureEqualsUpperBoundaryDoNothing()
     {
         // --- Arrange ---
-        // Configure the mock object to get the temperature equal than upper boundary = 22.0
-        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(22.0);
+        // Configure the mock object to get the temperature equal than upper boundary = Setpoint + Offset
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(Setpoint + Offset);
 
         // --- Act ---
         thermostat.Work();
@@ -104,8 +109,8 @@ public class ThermostatTests
     public void WorkWhenTemperatureFailsAndNotInsafeModeDoNothing()
     {
         // --- Arrange ---
-        // Configure the mock object to get the temperature equal than the setpoint = 20.0. This will set the status of the Thermostat object to "active" 
-        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(20.0);
+        // Configure the mock object to get the temperature equal than the setpoint. This will set the status of the Thermostat object to "active" 
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(Setpoint);
         thermostat.Work();
 
         // Configure the mock object to getting the temperature throws an exception
@@ -152,8 +157,8 @@ public class ThermostatTests
         {
             thermostat.Work();
         }
-        // Configure the mock object to get the temperature equal than the setpoint = 20.0. This will set the status of the Thermostat object to "active" 
-        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(20.0);
+        // Configure the mock object to get the temperature equal than the setpoint. This will set the status of the Thermostat object to "active" 
+        temperatureSensorMock.Setup(x => x.GetTemperature()).Returns(Setpoint);
 
         // --- Act ---
         thermostat.Work();

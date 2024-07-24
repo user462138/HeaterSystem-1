@@ -8,6 +8,7 @@ namespace HeaterSystem;
 
 public interface IHeatingElement
 {
+    public bool IsEnabled { get; }
     public void Enable();
     public void Disable();
 }
