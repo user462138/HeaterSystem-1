@@ -11,13 +11,10 @@ public class TemperatureSensorOpenWeather : ITemperatureSensor
 {
     private string url = "http://api.openweathermap.org/data/2.5/weather?q=Antwerp,BE&appid=b1a90ec4d94d84ecf2a3f2bb634b970d&units=metric";
 
-    public TemperatureSensorOpenWeather()
+    public string Url 
     {
-    }
-
-    public TemperatureSensorOpenWeather(string url) 
-    {  
-        this.url = url; 
+        get { return url; }
+        set { url = value; }
     }
 
     public double GetTemperature()
