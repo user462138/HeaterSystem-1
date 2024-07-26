@@ -128,4 +128,23 @@ public class ThermostatTests
         // Assert
         Assert.IsFalse(heatingElement.IsEnabled);
     }
+    [Test]
+    public void WhenTemperatureFailsAndNotInsafeModeDoNothing()
+    {
+        // Arrange
+        // instantiate the temperaturesensor object but it will be using Mockoon (url) - first set the heaterelement object active
+        string queryParam = "?temp=" + (Setpoint - Offset - Difference).ToString(CultureInfo.InvariantCulture);
+        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
+        // Create the test object, set the setpoint and offset and MaxFailures
+        thermostat.Work();
+        Assert.IsTrue(heatingElement.IsEnabled);
+
+        temperatureSensor.Url = $"{UrlMockoonException}";
+
+        // Act
+        thermostat.Work();
+
+        // Assert
+        Assert.IsTrue(heatingElement.IsEnabled);
+    }
 }
