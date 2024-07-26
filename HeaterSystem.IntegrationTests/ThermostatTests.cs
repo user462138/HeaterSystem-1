@@ -86,4 +86,46 @@ public class ThermostatTests
         // Assert
         Assert.IsFalse(heatingElement.IsEnabled);
     }
+    [Test]
+    public void WhenTemperatureLessThenLowerBoundaryHeaterElementEnabled()
+    {
+        // Arrange
+        // temperature between boundaries => do nothing
+        string queryParam = "?temp=" + (Setpoint - Offset - Difference).ToString(CultureInfo.InvariantCulture);
+        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
+        // Create the test object, set the setpoint and offset and MaxFailures
+        thermostat = new Thermostat(temperatureSensor, heatingElement)
+        {
+            Setpoint = Setpoint,
+            Offset = Offset,
+            MaxFailures = MaxFailures
+        };
+
+        // Act
+        thermostat.Work();
+
+        // Assert
+        Assert.IsTrue(heatingElement.IsEnabled);
+    }
+    [Test]
+    public void WhenTemperatureHigherThenUpperBoundaryHeaterElementDisabled()
+    {
+        // Arrange
+        // temperature between boundaries => do nothing
+        string queryParam = "?temp=" + (Setpoint + Offset + Difference).ToString(CultureInfo.InvariantCulture);
+        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
+        // Create the test object, set the setpoint and offset and MaxFailures
+        thermostat = new Thermostat(temperatureSensor, heatingElement)
+        {
+            Setpoint = Setpoint,
+            Offset = Offset,
+            MaxFailures = MaxFailures
+        };
+
+        // Act
+        thermostat.Work();
+
+        // Assert
+        Assert.IsFalse(heatingElement.IsEnabled);
+    }
 }
