@@ -13,4 +13,8 @@ Scenario: 1a - the heater is off and temperature is between setpoint minus/plus 
      When the temperature is between boundaries
      Then do nothing - heather is off
 
+Scenario: 1b - the heater is on and temperature is between setpoint minus/plus offset - do nothing
+    Given the heater is on
+     When the temperature is between boundaries
+     Then do nothing - heather is on
 
