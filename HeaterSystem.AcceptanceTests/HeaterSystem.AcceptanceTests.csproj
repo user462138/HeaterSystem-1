@@ -23,4 +23,14 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HeaterSystem\HeaterSystem.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Features\Thermostat.Feature">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
