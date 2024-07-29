@@ -40,6 +40,7 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
     // Step implementations, possible attributes are Given, When, Then, And
 
     [Given(@"the heater is off")]
+    [When(@"the temperature exceeds upper boundary")]
     public void SetHeaterOff()
     {
         string queryParam = "?temp=" + (Setpoint + Offset + Difference).ToString(CultureInfo.InvariantCulture);
@@ -70,14 +71,15 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
         temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
     }
 
-    [Then(@"do nothing - heather is off")]
+    [Then(@"turn heater off")]
+    [Then(@"do nothing - heater is off")]
     public void CheckHeaterOff()
     {
         thermostat.Work();
         Assert.False(heatingElement.IsEnabled);
     }
-    [Then(@"turn heather on")]
-    [Then(@"do nothing - heather is on")]
+    [Then(@"turn heater on")]
+    [Then(@"do nothing - heater is on")]
     public void CheckHeaterOn()
     {
         thermostat.Work();
