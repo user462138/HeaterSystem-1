@@ -31,3 +31,8 @@ Scenario: 4 - temperature exceeds upper boundary - turn heater off
      Given the heater is on
      When the temperature exceeds upper boundary
      Then turn heater off
+
+Scenario: 5 - temperature equals upper boundary - do nothing
+     Given the heater is off
+     When the temperature equals upper boundary
+     Then turn heater off

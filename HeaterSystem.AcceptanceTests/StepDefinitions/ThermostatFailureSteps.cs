@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit.Gherkin.Quick;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HeaterSystem.AcceptanceTests.StepDefinitions;
 
-[FeatureFile("./Features/Thermostat.Feature")] // Annotation that links feature file
-public sealed class ThermostatSteps : Feature  // Must inherit from Feature
+[FeatureFile("./Features/ThermostatFailure.Feature")] // Annotation that links feature file
+public sealed class ThermostatFailureSteps : Feature  // Must inherit from Feature
 {
     // Setup
 
@@ -25,7 +26,7 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
     private readonly ITemperatureSensor temperatureSensor = null;
     private readonly Thermostat thermostat;
 
-    public ThermostatSteps()
+    public ThermostatFailureSteps()
     {
         temperatureSensor = new TemperatureSensorOpenWeather();
         heatingElement = new HeatingElementStub();
@@ -39,15 +40,6 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
 
     // Step implementations, possible attributes are Given, When, Then, And
 
-    [Given(@"the heater is off")]
-    [When(@"the temperature exceeds upper boundary")]
-    public void SetHeaterOff()
-    {
-        string queryParam = "?temp=" + (Setpoint + Offset + Difference).ToString(CultureInfo.InvariantCulture);
-        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
-        thermostat.Work();
-    }
-
     [Given(@"the heater is on")]
     [When(@"the temperature is less than lower boundary")]
     public void SetHeaterOn()
@@ -56,41 +48,64 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
         temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
         thermostat.Work();
     }
-
-    [When(@"the temperature is between boundaries")]
-    public void SetTemperatureBetweenBoundaries()
+    [Given(@"thermostat in safe mode")]
+    public void SetThermostatInsafeMode()
     {
+        string queryParam = "";
+        temperatureSensor.Url = $"{UrlMockoonException}{queryParam}";
+        for (int i = 0; i < MaxFailures; i++)
+        {
+            thermostat.Work();
+        }
+    }
+    [When(@"getting the temperature fails")]
+    public void GetTemperatureGivesException()
+    {
+        string queryParam = "";
+        temperatureSensor.Url = $"{UrlMockoonException}{queryParam}";
+        thermostat.Work();
+    }
+
+    [And(@"number of failures is less than maximum")]
+    public void ResetNumberOfFailures()
+    {
+        // Just resetting the failures counter
         string queryParam = "?temp=" + (Setpoint).ToString(CultureInfo.InvariantCulture);
         temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
-    }
-
-    [When(@"the temperature equals lower boundary")]
-    public void SetTemperatureToLowerBoundary()
-    {
-        string queryParam = "?temp=" + (Setpoint - Offset).ToString(CultureInfo.InvariantCulture);
-        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
-    }
-
-    [When(@"the temperature equals upper boundary")]
-    public void SetTemperatureToUpperBoundary()
-    {
-        string queryParam = "?temp=" + (Setpoint + Offset).ToString(CultureInfo.InvariantCulture);
-        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
-    }
-
-    [Then(@"turn heater off")]
-    [Then(@"do nothing - heater is off")]
-    public void CheckHeaterOff()
-    {
         thermostat.Work();
-        Assert.False(heatingElement.IsEnabled);
     }
-    [Then(@"turn heater on")]
+
+    [And(@"number of failures is maximum failures minus one")]
+    public void SetMaximumNumberOfFailuresMinusOne()
+    {
+        string queryParam = "";
+        temperatureSensor.Url = $"{UrlMockoonException}{queryParam}";
+        for (int i = 1; i < MaxFailures; i++) 
+        {
+            thermostat.Work();
+        }
+    }
+
     [Then(@"do nothing - heater is on")]
+    [Then(@"turn heater on")]
     public void CheckHeaterOn()
     {
-        thermostat.Work();
         Assert.True(heatingElement.IsEnabled);
+    }
+    [Then(@"turn heater off")]
+    public void CheckHeaterOff()
+    {
+        Assert.False(heatingElement.IsEnabled);
+    }
+    [And(@"set thermostat in safe mode")]
+    public void CheckThermostatInSafeMode()
+    {
+        Assert.True(thermostat.InSafeMode);
+    }
+    [And(@"set thermostat in normal mode")]
+    public void CheckThermostatInNormalMode()
+    {
+        Assert.False(thermostat.InSafeMode);
     }
 }
 

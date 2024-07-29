@@ -173,4 +173,24 @@ public class ThermostatTests
         Assert.IsTrue(thermostat.InSafeMode);
         Assert.IsFalse(heatingElement.IsEnabled);
     }
+    [Test]
+    public void WhenInSafeModeAndTemperatureSuccesReset()
+    {
+        // Arrange
+        temperatureSensor.Url = $"{UrlMockoonException}";
+        // number of failures = MaxFailures -> In safe mode
+        for (int i = 0; i < thermostat.MaxFailures; i++)
+        {
+            thermostat.Work();
+        }
+        string queryParam = "?temp=" + (Setpoint).ToString(CultureInfo.InvariantCulture);
+        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
+
+        // --- Act ---
+        thermostat.Work();
+
+        // --- Assert ---
+        // Verify that InSafeMode is off
+        Assert.IsFalse(thermostat.InSafeMode);
+    }
 }

@@ -28,6 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Features\ThermostatFailure.Feature">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Features\Thermostat.Feature">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
