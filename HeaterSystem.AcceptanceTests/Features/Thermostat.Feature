@@ -18,3 +18,6 @@ Scenario: 1b - the heater is on and temperature is between setpoint minus/plus o
      When the temperature is between boundaries
      Then do nothing - heather is on
 
+Scenario: 2 - temperature is less than lower boundary - turn heater on
+     When the temperature is less than lower boundary
+     Then turn heather on

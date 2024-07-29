@@ -46,8 +46,9 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
         temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
         thermostat.Work();
     }
-    
+
     [Given(@"the heater is on")]
+    [When(@"the temperature is less than lower boundary")]
     public void SetHeaterOn()
     {
         string queryParam = "?temp=" + (Setpoint - Offset - Difference).ToString(CultureInfo.InvariantCulture);
@@ -60,17 +61,21 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
     {
         string queryParam = "?temp=" + (Setpoint).ToString(CultureInfo.InvariantCulture);
         temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
-        thermostat.Work();
     }
 
     [Then(@"do nothing - heather is off")]
     public void CheckHeaterOff()
     {
+        thermostat.Work();
         Assert.False(heatingElement.IsEnabled);
     }
+    [Then(@"turn heather on")]
     [Then(@"do nothing - heather is on")]
     public void CheckHeaterOn()
     {
+        thermostat.Work();
         Assert.True(heatingElement.IsEnabled);
     }
 }
+
+
