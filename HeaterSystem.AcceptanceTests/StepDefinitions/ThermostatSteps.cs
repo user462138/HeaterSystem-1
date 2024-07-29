@@ -63,6 +63,13 @@ public sealed class ThermostatSteps : Feature  // Must inherit from Feature
         temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
     }
 
+    [When(@"the temperature equals lower boundary")]
+    public void SetTemperatureToLowerBoundary()
+    {
+        string queryParam = "?temp=" + (Setpoint - Offset).ToString(CultureInfo.InvariantCulture);
+        temperatureSensor.Url = $"{UrlMockoon}{queryParam}";
+    }
+
     [Then(@"do nothing - heather is off")]
     public void CheckHeaterOff()
     {
